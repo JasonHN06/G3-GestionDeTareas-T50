@@ -1,5 +1,5 @@
 import { useTasks } from "./hooks/useTask";
-import { ordenarTareasPorFechaYPrioridad, marcarTareasVencidas } from "./utils/taskLogic";
+import { ordenarTareasPorFechaYPrioridad, marcarTareasVencidas } from "./utils/TaskLogic";
 
 function App() {
   const { tasks, addTask } = useTasks();
