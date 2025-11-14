@@ -1,4 +1,5 @@
 import { useTasks } from "./hooks/useTask";
+import { ordenarTareasPorFechaYPrioridad, marcarTareasVencidas } from "./utils/TaskLogic";
 
 function App() {
   const { tasks, addTask } = useTasks();
@@ -12,6 +13,9 @@ function App() {
     });
   };
 
+  const tareasOrdenadas = ordenarTareasPorFechaYPrioridad(tasks);
+  const tareasParaMostrar = marcarTareasVencidas(tareasOrdenadas);
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold">Gestión de Tareas</h1>
@@ -19,9 +23,12 @@ function App() {
         Agregar Tarea de Prueba
       </button>
       <ul>
-        {tasks.map((task) => (
-          <li key={task.id}>
+        {tareasParaMostrar.map((task) => (
+          <li key={task.id} className={task.vencida ? "bg-red-200" : ""}>
             {task.nombre} - {task.estado} - Prioridad: {task.prioridad}
+            {task.vencida && task.estado === "Pendiente" && (
+              <span className="text-red-700 font-bold ml-2">Pendiente Vencida</span>
+            )}
           </li>
         ))}
       </ul>
@@ -29,4 +36,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
