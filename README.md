@@ -71,3 +71,4 @@ export default defineConfig([
   },
 ])
 ```
+Commit de prueba — Blanca
