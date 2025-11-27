@@ -9,7 +9,7 @@ function App() {
     addTask({
       nombre: "Tarea de Prueba",
       descripcion: "Descripción de prueba",
-      fechaLimite: new Date("2025-11-15"),
+      fechaLimite: new Date("2025-12-01"),
       prioridad: "Alta",
     });
   };
@@ -18,8 +18,8 @@ function App() {
   const tareasParaMostrar = marcarTareasVencidas(tareasOrdenadas);
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold">Gestión de Tareas</h1>
+    <div className="p-4 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold mb-4">Gestión de Tareas</h1>
 
       <button
         onClick={handleAddTestTask}
@@ -28,7 +28,7 @@ function App() {
         Agregar Tarea de Prueba
       </button>
 
-      {/* AQUÍ VA TU COMPONENTE PROFESIONAL */}
+      {/* TU TABLA PROFESIONAL */}
       <TaskList tasks={tareasParaMostrar} />
     </div>
   );

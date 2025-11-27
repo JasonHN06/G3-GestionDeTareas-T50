@@ -3,8 +3,8 @@ export interface Task {
   nombre: string;
   descripcion: string;
   fechaLimite: Date;
-  prioridad: string;
+  prioridad: "Alta" | "Media" | "Baja";
   estado: string;
-  fechaUltimoCambio?: Date;
-  vencida?: boolean;  // <- AGREGAR ESTO
+  fechaUltimoCambio?: Date | null;
+  vencida?: boolean;
 }
