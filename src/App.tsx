@@ -1,16 +1,15 @@
 import { useTasks } from "./hooks/useTask";
 import { ordenarTareasPorFechaYPrioridad, marcarTareasVencidas } from "./utils/TaskLogic";
-import TaskList from "./components/TaskList";
 
 function App() {
   const { tasks, addTask, completeTask } = useTasks();
 
   const handleAddTestTask = () => {
     addTask({
-      nombre: "Tarea de Prueba",
-      descripcion: "Descripción de prueba",
-      fechaLimite: new Date("2025-12-01"),
-      prioridad: "Alta",
+      nombre: 'Tarea de Prueba',
+      descripcion: 'Descripción de prueba',
+      fechaLimite: new Date('2025-11-15'),
+      prioridad: 'Alta',
     });
   };
 
