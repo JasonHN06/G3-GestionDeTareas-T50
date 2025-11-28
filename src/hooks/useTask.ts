@@ -24,22 +24,36 @@ export const useTasks = () => {
       const tasksToStore = tasks.map((task) => ({
         ...task,
         fechaLimite: task.fechaLimite.toISOString(),
-        fechaUltimoCambio: task.fechaUltimoCambio ? task.fechaUltimoCambio.toISOString() : null,
+        fechaUltimoCambio: task.fechaUltimoCambio
+          ? task.fechaUltimoCambio.toISOString()
+          : null,
       }));
       localStorage.setItem(TASKS_KEY, JSON.stringify(tasksToStore));
     }
   }, [tasks]);
 
-  const addTask = (newTask: Omit<Task, 'id' | 'estado' | 'fechaUltimoCambio'>) => {
+  const addTask = (
+    newTask: Omit<Task, "id" | "estado" | "fechaUltimoCambio">
+  ) => {
     const id = crypto.randomUUID();
     const task: Task = {
       ...newTask,
       id,
-      estado: 'Pendiente',
+      estado: "Pendiente",
       fechaUltimoCambio: null,
     };
     setTasks((prev) => [...prev, task]);
   };
 
-  return { tasks, setTasks, addTask };
+  const completeTask = (id: string) => {
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === id && t.estado === "Pendiente"
+          ? { ...t, estado: "Completada", fechaUltimoCambio: new Date() }
+          : t
+      )
+    );
+  };
+
+  return { tasks, setTasks, addTask, completeTask };
 };

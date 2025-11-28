@@ -3,7 +3,7 @@ import { ordenarTareasPorFechaYPrioridad, marcarTareasVencidas } from "./utils/T
 import TaskList from "./components/TaskList";
 
 function App() {
-  const { tasks, addTask } = useTasks();
+  const { tasks, addTask, completeTask } = useTasks();
 
   const handleAddTestTask = () => {
     addTask({
@@ -18,18 +18,20 @@ function App() {
   const tareasParaMostrar = marcarTareasVencidas(tareasOrdenadas);
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">Gestión de Tareas</h1>
-
-      <button
-        onClick={handleAddTestTask}
-        className="bg-blue-500 text-white p-2 mt-4 rounded"
-      >
+    <div className="p-4">
+      <h1 className="text-2xl font-bold">Gestión de Tareas</h1>
+      <button onClick={handleAddTestTask} className="bg-blue-500 text-white p-2 mt-4 mb-2">
         Agregar Tarea de Prueba
       </button>
-
-      {/* TU TABLA PROFESIONAL */}
-      <TaskList tasks={tareasParaMostrar} />
+      <ul>
+        {tareasParaMostrar.map((task) => (
+          <li key={task.id} className={`${task.vencida ? "bg-red-200" : ""} ${task.estado === "Completada" ? "bg-green-200" : ""} p-2 mb-2`}>  
+            {task.nombre} - {task.estado} - Prioridad: {task.prioridad}  
+            {task.vencida && <span className="text-red-700 font-bold ml-2">Pendiente Vencida</span>}  
+            {task.estado === "Pendiente" && <button onClick={() => completeTask(task.id)} className="bg-green-500 text-white p-1 ml-2">Completar</button>}  
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
