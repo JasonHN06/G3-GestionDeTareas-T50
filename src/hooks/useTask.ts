@@ -20,17 +20,34 @@ export const useTasks = () => {
   }, []);
 
   useEffect(() => {
-    if (tasks.length > 0) {
-      const tasksToStore = tasks.map((task) => ({
-        ...task,
-        fechaLimite: task.fechaLimite.toISOString(),
-        fechaUltimoCambio: task.fechaUltimoCambio
-          ? task.fechaUltimoCambio.toISOString()
-          : null,
-      }));
-      localStorage.setItem(TASKS_KEY, JSON.stringify(tasksToStore));
+    const storedTasks = localStorage.getItem(TASKS_KEY);
+
+    if (storedTasks) {
+      const parsed = JSON.parse(storedTasks);
+
+      const safeTasks = parsed.map((t: any) => {
+        // Validación de fechaLímite
+        const fechaLimiteObj = new Date(t.fechaLímite || t.fechaLimite);
+        const fechaLimiteValida = isNaN(fechaLimiteObj.getTime())
+          ? new Date() // fallback seguro
+          : fechaLimiteObj;
+
+        // Validación de fechaUltimoCambio
+        const fechaCambioObj = new Date(t.fechaUltimoCambio);
+        const fechaCambioValida = isNaN(fechaCambioObj.getTime())
+          ? null
+          : fechaCambioObj;
+
+        return {
+          ...t,
+          fechaLimite: fechaLimiteValida,
+          fechaUltimoCambio: fechaCambioValida,
+        };
+      });
+
+      setTasks(safeTasks);
     }
-  }, [tasks]);
+  }, []);
 
   const addTask = (
     newTask: Omit<Task, "id" | "estado" | "fechaUltimoCambio">
