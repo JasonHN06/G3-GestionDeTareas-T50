@@ -42,9 +42,9 @@ const TaskList: React.FC<Props> = ({ tasks, onComplete }) => {
               const fecha = new Date(t.fechaLimite).getTime();
               const vencida = t.estado === "Pendiente" && fecha < hoy;
 
-              let rowColor = "#fff"; // normal
-              if (t.estado === "Completada") rowColor = "#c6f6d5"; // verde suave
-              if (vencida) rowColor = "#ffe0e0"; // rosado suave
+              let rowColor = "#fff";
+              if (t.estado === "Completada") rowColor = "#c6f6d5";
+              if (vencida) rowColor = "#ffe0e0";
 
               return (
                 <tr

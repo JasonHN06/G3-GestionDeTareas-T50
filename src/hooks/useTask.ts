@@ -5,40 +5,36 @@ const TASKS_KEY = "tasks";
 export const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   useEffect(() => {
-    const storedTasks = localStorage.getItem(TASKS_KEY);
-    if (storedTasks) {
-      const parsedTasks = JSON.parse(storedTasks);
-      const tasksWithDates: Task[] = parsedTasks.map((task: any) => ({
-        ...task,
-        fechaLimite: new Date(task.fechaLimite),
-        fechaUltimoCambio: task.fechaUltimoCambio
-          ? new Date(task.fechaUltimoCambio)
-          : null,
-      }));
-      setTasks(tasksWithDates);
+    const stored = localStorage.getItem(TASKS_KEY);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        const tasksWithDates: Task[] = parsed.map((task: any) => ({
+          ...task,
+          fechaLimite: new Date(task.fechaLimite),
+          fechaUltimoCambio: task.fechaUltimoCambio ? new Date(task.fechaUltimoCambio) : null,
+        }));
+        setTasks(tasksWithDates);
+      } catch (e) {
+        console.error("Error al leer tareas del localStorage", e);
+      }
     }
   }, []);
 
   useEffect(() => {
     if (tasks.length > 0) {
-      const tasksToStore = tasks.map((task) => ({
-        ...task,
-        fechaLimite: task.fechaLimite.toISOString(),
-        fechaUltimoCambio: task.fechaUltimoCambio
-          ? task.fechaUltimoCambio.toISOString()
-          : null,
-      }));
-      localStorage.setItem(TASKS_KEY, JSON.stringify(tasksToStore));
+      localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+    } else {
+      localStorage.removeItem(TASKS_KEY);
     }
   }, [tasks]);
 
   const addTask = (
     newTask: Omit<Task, "id" | "estado" | "fechaUltimoCambio">
   ) => {
-    const id = crypto.randomUUID();
     const task: Task = {
       ...newTask,
-      id,
+      id: crypto.randomUUID(),
       estado: "Pendiente",
       fechaUltimoCambio: null,
     };
