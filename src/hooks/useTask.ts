@@ -51,5 +51,43 @@ export const useTasks = () => {
     );
   };
 
-  return { tasks, setTasks, addTask, completeTask };
+  const editTask = (
+    id: string,
+    updatedData: Omit<Task, "id" | "estado" | "fechaUltimoCambio">
+  ) => {
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === id
+          ? {
+              ...t,
+              nombre: updatedData.nombre,
+              descripcion: updatedData.descripcion,
+              fechaLimite: updatedData.fechaLimite,
+              prioridad: updatedData.prioridad,
+            }
+          : t
+      )
+    );
+  };
+
+  const deleteTask = (id: string) => {
+    setTasks((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  const toggleTaskStatus = (id: string) => {
+    setTasks((prev) =>
+      prev.map((t) => {
+        if (t.id === id) {
+          // Si cambia de Pendiente a Completada, actualizar fecha
+          if (t.estado === "Pendiente") {
+            return { ...t, estado: "Completada", fechaUltimoCambio: new Date() };
+          }
+          return { ...t, estado: "Pendiente" };
+        }
+        return t;
+      })
+    );
+  };
+
+  return { tasks, setTasks, addTask, completeTask, editTask, deleteTask, toggleTaskStatus };
 };

@@ -1,16 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import type { Task } from "../types/task";
+import ConfirmModal from "./ConfirmModal";
 
 interface Props {
   tasks: Task[];
   onComplete: (id: string) => void;
+  onEdit: (task: Task) => void;
+  onDelete: (id: string) => void;
 }
 
-const TaskList: React.FC<Props> = ({ tasks, onComplete }) => {
+const TaskList: React.FC<Props> = ({ tasks, onComplete, onEdit, onDelete }) => {
   const hoy = Date.now();
+  const [deleteModal, setDeleteModal] = useState<{ id: string; nombre: string } | null>(null);
+
+  const handleDelete = (id: string, nombre: string) => {
+    setDeleteModal({ id, nombre });
+  };
+
+  const confirmDelete = () => {
+    if (deleteModal) {
+      onDelete(deleteModal.id);
+      setDeleteModal(null);
+    }
+  };
 
   return (
     <div style={{ marginTop: "20px", width: "100%", overflowX: "auto" }}>
+      <ConfirmModal
+        isOpen={deleteModal !== null}
+        title="Confirmar Eliminación"
+        message={`¿Está seguro de eliminar la tarea "${deleteModal?.nombre}"?`}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteModal(null)}
+      />
+      
       {tasks.length === 0 ? (
         <p>No hay tareas registradas.</p>
       ) : (
@@ -83,18 +106,69 @@ const TaskList: React.FC<Props> = ({ tasks, onComplete }) => {
 
                   <td style={tdStyle}>
                     {t.estado === "Pendiente" && (
+                      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                        <button
+                          onClick={() => onComplete(t.id)}
+                          style={{
+                            backgroundColor: "#10b981",
+                            color: "#fff",
+                            border: "none",
+                            padding: "6px 12px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            fontSize: "13px",
+                          }}
+                          title="Completar tarea"
+                        >
+                          Completar
+                        </button>
+                        <button
+                          onClick={() => onEdit(t)}
+                          style={{
+                            backgroundColor: "#f59e0b",
+                            color: "#fff",
+                            border: "none",
+                            padding: "6px 12px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            fontSize: "13px",
+                          }}
+                          title="Editar tarea"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => handleDelete(t.id, t.nombre)}
+                          style={{
+                            backgroundColor: "#ef4444",
+                            color: "#fff",
+                            border: "none",
+                            padding: "6px 12px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            fontSize: "13px",
+                          }}
+                          title="Eliminar tarea"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    )}
+                    {t.estado === "Completada" && (
                       <button
-                        onClick={() => onComplete(t.id)}
+                        onClick={() => handleDelete(t.id, t.nombre)}
                         style={{
-                          backgroundColor: "#2563eb",
+                          backgroundColor: "#ef4444",
                           color: "#fff",
                           border: "none",
                           padding: "6px 12px",
                           borderRadius: "4px",
                           cursor: "pointer",
+                          fontSize: "13px",
                         }}
+                        title="Eliminar tarea"
                       >
-                        Completar
+                        Eliminar
                       </button>
                     )}
                   </td>
