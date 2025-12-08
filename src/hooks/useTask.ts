@@ -82,7 +82,6 @@ export const useTasks = () => {
           if (t.estado === "Pendiente") {
             return { ...t, estado: "Completada", fechaUltimoCambio: new Date() };
           }
-          // Si cambia de Completada a Pendiente, mantener la fecha
           return { ...t, estado: "Pendiente" };
         }
         return t;
